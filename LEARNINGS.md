@@ -32,6 +32,11 @@ bottom of each section.
   revision for URW++) is on CTAN as OpenType under the AFPL
   (non-commercial). fontTools converts CFF to TrueType with `Cu2QuPen`.
 
+- Google key referrer restrictions: browsers' default
+  `strict-origin-when-cross-origin` policy sends only the origin on
+  cross-origin tile requests, so restrict to `https://user.github.io/*`, not
+  a project path.
+
 ## Data
 
 - City of LA Bureau of Street Lighting poles: ArcGIS FeatureServer

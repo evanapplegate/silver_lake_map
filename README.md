@@ -37,7 +37,9 @@ it leaking through history and forks; the real protection is restricting it.
 - **Production key restrictions** (Google Cloud Console, APIs & Services,
   Credentials):
   - Application restriction: Websites, referrer
-    `https://evanapplegate.github.io/silver_lake_map/*`
+    `https://evanapplegate.github.io/*`. Browsers send only the origin as
+    the Referer on cross-origin tile requests, so a path-scoped pattern
+    would block the site itself.
   - API restriction: Map Tiles API only
   - Quotas: cap Map Tiles API requests per day, and set a billing budget
     alert
