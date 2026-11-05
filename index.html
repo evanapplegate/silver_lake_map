@@ -94,13 +94,16 @@
       #panel h2::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
       body.panel-collapsed #panel { display: none; }
       #caret {
-        position: fixed; top: 6px; left: 6px; z-index: 10; width: 0; height: 0; padding: 0; cursor: pointer;
-        border: 0; border-left: 4px solid var(--caret); border-top: 3px solid transparent; border-bottom: 3px solid transparent;
-        background: none; display: none;
+        position: fixed; top: 3px; left: 3px; z-index: 10; display: none; align-items: center; gap: 5px;
+        padding: 3px; border: 0; background: none; cursor: pointer; color: var(--caret);
+        font: 8.5px/1 "Optima Local", Optima, Candara, sans-serif; letter-spacing: 0.22em;
       }
-      #caret:hover { border-left-color: var(--accent); }
-      #caret::before { content: ""; position: absolute; inset: -8px -6px -8px -10px; }
-      body.panel-collapsed #caret { display: block; }
+      #caret::before {
+        content: ""; width: 0; height: 0;
+        border-left: 4px solid currentColor; border-top: 3px solid transparent; border-bottom: 3px solid transparent;
+      }
+      #caret:hover { color: var(--accent); }
+      body.panel-collapsed #caret { display: flex; }
       #panel label { display: grid; grid-template-columns: 74px 1fr 44px; gap: 10px; align-items: center; margin: 2px 0; min-height: 20px; }
       #panel label > span { text-align: right; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
       #panel input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 14px; margin: 0; background: transparent; cursor: pointer; --pct: 50%; }
@@ -138,7 +141,7 @@
   </head>
   <body>
     <div id="main"></div>
-    <button id="caret" aria-label="Show controls"></button>
+    <button id="caret" aria-label="Show controls">CONTROL PANEL</button>
     <div id="panel" hidden>
       <div class="head">
         <h1>Rainy Night in Silver Lake</h1>
