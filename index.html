@@ -85,6 +85,8 @@
       #panel #sound .waves { display: none; }
       #panel #sound[aria-pressed="true"] .waves { display: inline; }
       #panel #sound[aria-pressed="true"] .mute { display: none; }
+      #panel .repo { display: block; margin: 0 0 2px; font-size: 13px; color: var(--muted); text-decoration: none; }
+      #panel .repo:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
       #panel h2 {
         display: flex; align-items: center; gap: 10px; margin: 14px 0 6px;
         font-size: 10.5px; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
@@ -148,6 +150,7 @@
           </svg>
         </button>
       </div>
+      <a class="repo" href="https://github.com/evanapplegate/silver_lake_map" target="_blank" rel="noopener">github.com/evanapplegate/silver_lake_map</a>
       <h2>Lights</h2>
       <label>Intensity <input id="intensity" type="range" min="0" max="40" step="0.25" /><span></span></label>
       <label>Fog <input id="fog" type="range" min="0" max="2" step="0.01" /><span></span></label>
