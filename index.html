@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silver Lake Sodium Rain</title>
+    <style>
+      /* System Optima where installed, else the bundled URW Classico */
+      @font-face { font-family: "Optima Local"; src: local("Optima"), local("Optima-Regular"), url(/fonts/classico-regular.ttf); }
+      @font-face { font-family: "Optima Local"; font-weight: 700; src: local("Optima Bold"), local("Optima-Bold"), url(/fonts/classico-bold.ttf); }
+      :root {
+        --ink: #f0dfc2;
+        --muted: #a88d6b;
+        --accent: #e9a54e;
+        --rule: rgba(240, 205, 160, 0.14);
+        --track: rgba(240, 205, 160, 0.16);
+      }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #050507; }
+      #main { position: fixed; inset: 0; }
+      #panel {
+        position: fixed; top: 14px; left: 14px; z-index: 10; box-sizing: border-box; width: 268px;
+        font: 13px/1.35 "Optima Local", Optima, "Optima Nova", Candara, "Segoe UI", sans-serif; color: var(--ink);
+        background: rgba(14, 10, 7, 0.74); backdrop-filter: blur(12px) saturate(1.2); -webkit-backdrop-filter: blur(12px) saturate(1.2);
+        border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px 12px;
+        max-height: calc(100vh - 28px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--track) transparent;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+      }
+      #panel h1 {
+        margin: 0 0 4px; font-size: 15px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase;
+        cursor: pointer; user-select: none; white-space: nowrap;
+      }
+      #panel h2 {
+        display: flex; align-items: center; gap: 10px; margin: 14px 0 6px;
+        font-size: 10.5px; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+      }
+      #panel h2::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+      body.panel-collapsed #panel { display: none; }
+      #caret {
+        position: fixed; top: 6px; left: 6px; z-index: 10; width: 0; height: 0; padding: 0; cursor: pointer;
+        border: 0; border-left: 4px solid rgba(240, 223, 194, 0.28); border-top: 3px solid transparent; border-bottom: 3px solid transparent;
+        background: none; display: none;
+      }
+      #caret:hover { border-left-color: var(--accent); }
+      #caret::before { content: ""; position: absolute; inset: -8px -6px -8px -10px; }
+      body.panel-collapsed #caret { display: block; }
+      #panel label { display: grid; grid-template-columns: 74px 1fr 44px; gap: 10px; align-items: center; margin: 2px 0; min-height: 20px; }
+      #panel label > span { text-align: right; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+      #panel input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 14px; margin: 0; background: transparent; cursor: pointer; --pct: 50%; }
+      #panel input[type=range]::-webkit-slider-runnable-track {
+        height: 2px; border-radius: 1px;
+        background: linear-gradient(to right, var(--accent) var(--pct), var(--track) var(--pct));
+      }
+      #panel input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none; width: 8px; height: 8px; margin-top: -3px; border-radius: 50%;
+        background: #f6dcae; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 6px rgba(233, 165, 78, 0.5);
+      }
+      #panel input[type=range]::-moz-range-track { height: 2px; border-radius: 1px; background: var(--track); }
+      #panel input[type=range]::-moz-range-progress { height: 2px; border-radius: 1px; background: var(--accent); }
+      #panel input[type=range]::-moz-range-thumb { width: 8px; height: 8px; border: 0; border-radius: 50%; background: #f6dcae; }
+      #panel input[type=color] {
+        -webkit-appearance: none; appearance: none; width: 100%; height: 12px; padding: 0; cursor: pointer;
+        border: 1px solid var(--rule); border-radius: 6px; background: none;
+      }
+      #panel input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+      #panel input[type=color]::-webkit-color-swatch { border: 0; border-radius: 5px; }
+      #panel select {
+        -webkit-appearance: none; appearance: none; width: 100%; font: inherit; font-size: 12px; color: var(--ink); cursor: pointer;
+        background: transparent; border: 0; border-bottom: 1px solid var(--rule); padding: 1px 0; border-radius: 0;
+      }
+      #panel select option { background: #1a130c; }
+      #panel .buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+      #panel button {
+        font: inherit; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); cursor: pointer;
+        background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 3px 10px;
+      }
+      #panel button:hover { border-color: var(--accent); }
+      #status { margin-top: 10px; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); font-style: italic; }
+      #nokey { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); z-index: 10; color: var(--ink); background: rgba(10,8,6,.8); font: 13px Optima, sans-serif; padding: 6px 12px; border-radius: 999px; }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <button id="caret" aria-label="Show controls"></button>
+    <div id="panel" hidden>
+      <h1>Silver Lake · 2000K</h1>
+      <h2>Lights</h2>
+      <label>Intensity <input id="intensity" type="range" min="0" max="40" step="0.25" /><span></span></label>
+      <label>Fog <input id="fog" type="range" min="0" max="2" step="0.01" /><span></span></label>
+      <label>Kelvin <input id="kelvin" type="range" min="1200" max="6500" step="50" /><span></span></label>
+      <label>Color <input id="lightColor" type="color" /><span></span></label>
+      <label>Radius <input id="radius" type="range" min="5" max="300" step="5" /><span></span></label>
+      <label>Halo <input id="halo" type="range" min="0.05" max="5" step="0.05" /><span></span></label>
+      <label>Ambient <input id="ambient" type="range" min="0" max="0.3" step="0.005" /><span></span></label>
+      <label>Exposure <input id="exposure" type="range" min="1" max="40" step="1" /><span></span></label>
+      <h2>Stars</h2>
+      <label>Bright <input id="starIntensity" type="range" min="0" max="100" step="1" /><span></span></label>
+      <label>Size <input id="starSize" type="range" min="0.25" max="6" step="0.25" /><span></span></label>
+      <h2>Rain</h2>
+      <label>Amount <input id="rainCount" type="range" min="0" max="30000" step="500" /><span></span></label>
+      <label>Opacity <input id="rainOpacity" type="range" min="0" max="1" step="0.05" /><span></span></label>
+      <label>Speed <input id="rainSpeed" type="range" min="0" max="0.005" step="0.0001" /><span></span></label>
+      <label>Length <input id="rainLength" type="range" min="5" max="200" step="5" /><span></span></label>
+      <label>Width <input id="rainWidth" type="range" min="0.5" max="8" step="0.5" /><span></span></label>
+      <label>Light <input id="rainLight" type="range" min="0" max="2" step="0.05" /><span></span></label>
+      <h2>Clouds</h2>
+      <label>Coverage <input id="cloud-coverage" type="range" min="0" max="1" step="0.01" /><span></span></label>
+      <label>Base m <input id="cloud-base" type="range" min="0" max="800" step="10" /><span></span></label>
+      <label>Thick m <input id="cloud-thickness" type="range" min="10" max="800" step="10" /><span></span></label>
+      <label>Density <input id="cloud-density" type="range" min="0" max="0.05" step="0.0005" /><span></span></label>
+      <label>Detail <input id="cloud-detail" type="range" min="0" max="1" step="0.05" /><span></span></label>
+      <label>Size m <input id="cloud-scale" type="range" min="100" max="3000" step="50" /><span></span></label>
+      <label>Flatten <input id="cloud-stretch" type="range" min="1" max="8" step="0.25" /><span></span></label>
+      <label>Wind m/s <input id="cloud-wind" type="range" min="0" max="20" step="0.5" /><span></span></label>
+      <label>Lamp lit <input id="cloud-glow" type="range" min="0" max="5" step="0.05" /><span></span></label>
+      <label>Reach m <input id="cloud-falloff" type="range" min="10" max="600" step="10" /><span></span></label>
+      <label>City glow <input id="cloud-skyGlow" type="range" min="0" max="0.3" step="0.005" /><span></span></label>
+      <label>Opacity <input id="cloud-opacity" type="range" min="0" max="1" step="0.05" /><span></span></label>
+      <h2>Street Labels</h2>
+      <label>Size m <input id="label-size" type="range" min="2" max="40" step="0.5" /><span></span></label>
+      <label>Tracking <input id="label-tracking" type="range" min="0" max="0.6" step="0.02" /><span></span></label>
+      <label>Repeat m <input id="label-repeat" type="range" min="50" max="1500" step="25" /><span></span></label>
+      <label>Lift m <input id="label-lift" type="range" min="0" max="40" step="0.5" /><span></span></label>
+      <label>Opacity <input id="label-opacity" type="range" min="0" max="1" step="0.05" /><span></span></label>
+      <label>Fill <input id="label-color" type="color" /><span></span></label>
+      <label>Brightness <input id="label-glow" type="range" min="0" max="4" step="0.05" /><span></span></label>
+      <label>Halo <input id="label-outlineColor" type="color" /><span></span></label>
+      <label>Halo px <input id="label-outline" type="range" min="0" max="8" step="0.25" /><span></span></label>
+      <label>Halo α <input id="label-outlineOpacity" type="range" min="0" max="1" step="0.05" /><span></span></label>
+      <label>Weight <select id="label-weight"><option value="regular">Regular</option><option value="bold">Bold</option><option value="italic">Italic</option><option value="bolditalic">Bold Italic</option></select><span></span></label>
+      <label>Facing <select id="label-facing"><option value="flat">Painted</option><option value="upright">Standing</option></select><span></span></label>
+      <label>Roads <select id="label-minRank"><option value="1">All streets</option><option value="2">Collectors +</option><option value="3">Arterials +</option><option value="4">Major +</option><option value="5">Freeways</option></select><span></span></label>
+      <div class="buttons">
+        <button id="label-show">Labels on</button>
+        <button id="label-upper">Caps off</button>
+        <button id="label-abbreviate">Abbrev on</button>
+        <button id="label-curved">Curved on</button>
+        <button id="label-declutter">Declutter on</button>
+      </div>
+      <div class="buttons">
+        <button id="clouds">Clouds on</button>
+        <button id="rain">Rain on</button>
+      </div>
+      <div id="status"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
