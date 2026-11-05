@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Silver Lake Sodium Rain</title>
+    <title>Rainy Night in Silver Lake</title>
     <style>
       /* System Optima where installed, else the bundled URW Classico */
       @font-face { font-family: "Optima Local"; src: local("Optima"), local("Optima-Regular"), url(/fonts/classico-regular.ttf); }
@@ -25,10 +25,20 @@
         max-height: calc(100vh - 28px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--track) transparent;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
       }
+      #panel .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 4px; }
       #panel h1 {
-        margin: 0 0 4px; font-size: 15px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase;
+        margin: 0; font-size: 17px; font-weight: 400; letter-spacing: 0.02em;
         cursor: pointer; user-select: none; white-space: nowrap;
       }
+      #panel #sound {
+        display: grid; place-items: center; width: 18px; height: 18px; padding: 0; margin: 0;
+        border: 0; border-radius: 2px; color: var(--muted); letter-spacing: 0;
+      }
+      #panel #sound:hover, #panel #sound[aria-pressed="true"] { color: var(--ink); }
+      #panel #sound svg { width: 15px; height: 15px; }
+      #panel #sound .waves { display: none; }
+      #panel #sound[aria-pressed="true"] .waves { display: inline; }
+      #panel #sound[aria-pressed="true"] .mute { display: none; }
       #panel h2 {
         display: flex; align-items: center; gap: 10px; margin: 14px 0 6px;
         font-size: 10.5px; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
@@ -82,7 +92,16 @@
     <div id="main"></div>
     <button id="caret" aria-label="Show controls"></button>
     <div id="panel" hidden>
-      <h1>Silver Lake · 2000K</h1>
+      <div class="head">
+        <h1>Rainy Night in Silver Lake</h1>
+        <button id="sound" aria-label="Rain sound" aria-pressed="false" title="Rain sound">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2.5 6h2.2L8 3.2v9.6L4.7 10H2.5z" />
+            <path class="waves" d="M10.4 6.1a2.6 2.6 0 0 1 0 3.8M12.2 4.4a5 5 0 0 1 0 7.2" />
+            <path class="mute" d="M10.5 6.5l3 3M13.5 6.5l-3 3" />
+          </svg>
+        </button>
+      </div>
       <h2>Lights</h2>
       <label>Intensity <input id="intensity" type="range" min="0" max="40" step="0.25" /><span></span></label>
       <label>Fog <input id="fog" type="range" min="0" max="2" step="0.01" /><span></span></label>

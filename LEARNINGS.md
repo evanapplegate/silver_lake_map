@@ -118,7 +118,21 @@ bottom of each section.
   a proxy mesh in `ctx.scenes.transparent` instead.
 - Fonts: Navara takes ttf/otf/woff/woff2, not `.ttc`.
 
+## Audio
+
+- `<audio loop>` leaves an audible gap at the wrap; an
+  `AudioBufferSourceNode` with `loop = true` is sample-accurate. Bake a
+  crossfade into the seam so the loop point itself doesn't jump.
+- Apple's `afconvert` AAC at 64 kbps picks 32 kHz on its own; fine for rain,
+  ~1/4 the MP3's size. Chrome's `decodeAudioData` honours the m4a edit list,
+  so there's no priming silence to trim.
+- Create the `AudioContext` inside the click handler; one made earlier stays
+  suspended under autoplay rules. Fetching the bytes early is fine.
+
 ## Tooling
+
+- zsh treats `$X:c` as a variable modifier, so ffmpeg filter strings like
+  `d=$X:curve=...` break; write `${X}`.
 
 - The desktop Browser pane, when hidden, stalls `requestAnimationFrame`, so
   screenshots go stale. Show the pane before judging renders.

@@ -18,6 +18,7 @@ import {
   type LitCloudsParams,
 } from "./litClouds";
 import { kelvinToHex, lightSceneWithLamps } from "./nightFogLight";
+import { RainSound } from "./rainSound";
 import {
   LabelsAfterFogPlugin,
   StreetLabels,
@@ -253,6 +254,17 @@ try {
   setCollapsed(localStorage.getItem("panel-collapsed") === "1");
 } catch {}
 panel.querySelector("h1")!.onclick = () => setCollapsed(true);
+
+const sound = new RainSound(`${import.meta.env.BASE_URL}audio/rain.m4a`);
+// Fetch once the scene has had its turn at the network
+setTimeout(() => sound.prefetch(), 4000);
+const soundBtn = document.getElementById("sound")!;
+soundBtn.onclick = () => {
+  const on = !sound.playing;
+  soundBtn.setAttribute("aria-pressed", String(on));
+  if (on) sound.play();
+  else sound.stop();
+};
 document.getElementById("caret")!.onclick = () => setCollapsed(false);
 const bind = (
   id: string,
@@ -310,11 +322,9 @@ const setLightColor = (hex: number) => {
 };
 colorInput.value = `#${params.color.toString(16).padStart(6, "0")}`;
 colorInput.oninput = () => setLightColor(parseInt(colorInput.value.slice(1), 16));
-const title = panel.querySelector("h1")!;
 bind("kelvin", params.kelvin, (v) => {
   params.kelvin = v;
   setLightColor(kelvinToHex(v));
-  title.textContent = `Silver Lake · ${v}K`;
 });
 bind("ambient", params.ambient, (v) => {
   params.ambient = v;
@@ -409,4 +419,4 @@ bindToggle("rain", "Rain", true, (v) => {
   rain.visible = v;
 });
 
-Object.assign(window, { view, scene, fogLight, rain, clouds, tiles, labels });
+Object.assign(window, { view, scene, fogLight, rain, clouds, tiles, labels, sound });

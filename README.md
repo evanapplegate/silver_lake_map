@@ -1,4 +1,4 @@
-# Silver Lake · 2000K
+# Rainy Night in Silver Lake
 
 Silver Lake, Los Angeles, at night in the rain: Google Photorealistic 3D Tiles
 lit only by the real City of LA streetlights as 2000 K low-pressure sodium,
@@ -64,6 +64,22 @@ Regenerate with the scripts in `scripts/`.
 The on-map attribution UI is turned off. Google's and OpenStreetMap's terms
 require visible credits on public pages, so restore them before using this
 for anything beyond a personal demo.
+
+## Audio
+
+`public/audio/rain.m4a` is the first 3 minutes of "Heavy Rain at Night in
+Old Parking Lot", made loop-ready and small:
+
+```bash
+# 4 s equal-power crossfade baked into the seam (tail over head), 176 s out
+ffmpeg -i in.mp3 -filter_complex "[0:a]atrim=4:176.024,asetpts=PTS-STARTPTS[mid];[0:a]atrim=176.024:180.024,asetpts=PTS-STARTPTS,afade=t=out:d=4:curve=qsin[tail];[0:a]atrim=0:4,asetpts=PTS-STARTPTS,afade=t=in:d=4:curve=qsin[head];[tail][head]amix=inputs=2:normalize=0[xf];[mid][xf]concat=n=2:v=0:a=1[out]" -map "[out]" -ar 44100 loop.wav
+# Apple AAC, 64 kbps: 6.1 MB -> 1.5 MB
+afconvert -f m4af -d aac -b 64000 -q 127 loop.wav public/audio/rain.m4a
+```
+
+It plays through Web Audio (`src/rainSound.ts`) so the loop is
+sample-accurate, and is prefetched a few seconds after load so the speaker
+button starts it at once.
 
 ## Fonts
 
