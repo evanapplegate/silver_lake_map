@@ -131,6 +131,10 @@ bottom of each section.
 
 ## Tooling
 
+- OG image from a WebGL page: set the pane viewport to 1200x630,
+  `gl.readPixels` in `postRender`, composite title text on a 2D canvas, and
+  POST the JPEG to a throwaway local `http.server` to get it onto disk.
+- GitHub Pages caches HTML ~10 min; verify deploys with a `?v=` query.
 - zsh treats `$X:c` as a variable modifier, so ffmpeg filter strings like
   `d=$X:curve=...` break; write `${X}`.
 
