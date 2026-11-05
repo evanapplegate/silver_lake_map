@@ -14,6 +14,7 @@
         --accent: #e9a54e;
         --rule: rgba(240, 205, 160, 0.14);
         --track: rgba(240, 205, 160, 0.16);
+        --caret: rgba(240, 223, 194, 0.28);
       }
       html, body { margin: 0; height: 100%; overflow: hidden; background: #050507; }
       #main { position: fixed; inset: 0; }
@@ -34,7 +35,9 @@
         display: grid; place-items: center; width: 18px; height: 18px; padding: 0; margin: 0;
         border: 0; border-radius: 2px; color: var(--muted); letter-spacing: 0;
       }
-      #panel #sound:hover, #panel #sound[aria-pressed="true"] { color: var(--ink); }
+      #panel #sound { color: var(--caret); }
+      #panel #sound:hover { color: var(--accent); }
+      #panel #sound .body { fill: currentColor; }
       #panel #sound svg { width: 15px; height: 15px; }
       #panel #sound .waves { display: none; }
       #panel #sound[aria-pressed="true"] .waves { display: inline; }
@@ -47,7 +50,7 @@
       body.panel-collapsed #panel { display: none; }
       #caret {
         position: fixed; top: 6px; left: 6px; z-index: 10; width: 0; height: 0; padding: 0; cursor: pointer;
-        border: 0; border-left: 4px solid rgba(240, 223, 194, 0.28); border-top: 3px solid transparent; border-bottom: 3px solid transparent;
+        border: 0; border-left: 4px solid var(--caret); border-top: 3px solid transparent; border-bottom: 3px solid transparent;
         background: none; display: none;
       }
       #caret:hover { border-left-color: var(--accent); }
@@ -96,7 +99,7 @@
         <h1>Rainy Night in Silver Lake</h1>
         <button id="sound" aria-label="Rain sound" aria-pressed="false" title="Rain sound">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2.5 6h2.2L8 3.2v9.6L4.7 10H2.5z" />
+            <path class="body" d="M2.5 6h2.2L8 3.2v9.6L4.7 10H2.5z" />
             <path class="waves" d="M10.4 6.1a2.6 2.6 0 0 1 0 3.8M12.2 4.4a5 5 0 0 1 0 7.2" />
             <path class="mute" d="M10.5 6.5l3 3M13.5 6.5l-3 3" />
           </svg>
