@@ -31,20 +31,21 @@ The Map Tiles API key has to reach the browser, so it is visible in the
 shipped JavaScript no matter how it's injected. Keeping it out of git stops
 it leaking through history and forks; the real protection is restricting it.
 
-- **Two keys.** A dev key in `.env.local` (gitignored) and a separate
-  production key that only exists as the `GOOGLE_MAPS_API_KEY` repo secret.
-  Neither is ever committed or put in a URL.
-- **Production key restrictions** (Google Cloud Console, APIs & Services,
-  Credentials):
-  - Application restriction: Websites, referrer
-    `https://evanapplegate.github.io/*`. Browsers send only the origin as
-    the Referer on cross-origin tile requests, so a path-scoped pattern
-    would block the site itself.
+- **Storage.** The key lives in `.env.local` (gitignored) for dev and in the
+  `GOOGLE_MAPS_API_KEY` repo secret for deploys. It's never committed or put
+  in a URL.
+- **Restrictions** (Google Cloud Console, APIs & Services, Credentials, on the
+  key):
+  - Application restriction: Websites, referrers
+    `https://evanapplegate.github.io/*`, `http://localhost:5173/*` and
+    `http://localhost:4173/*`. Browsers send only the origin as the Referer
+    on cross-origin tile requests, so a path-scoped pattern like
+    `.../silver_lake_map/*` would block the site itself.
   - API restriction: Map Tiles API only
   - Quotas: cap Map Tiles API requests per day, and set a billing budget
     alert
-- **Dev key restrictions:** referrer `http://localhost:5173/*` and
-  `http://localhost:4173/*`, Map Tiles API only.
+- **Stricter option:** split into a localhost-only dev key and a
+  github.io-only production key, so a leaked dev key can't serve the site.
 - **Rotation:** create the new key, update the secret
   (`gh secret set GOOGLE_MAPS_API_KEY`), re-run the deploy workflow, then
   delete the old key.
